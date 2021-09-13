@@ -1,13 +1,15 @@
 import React from "react";
-import { Card, Button } from "react-bootstrap";
+import { Card, Col, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
 function CompanyDetail() {
   const [jobsArray, setJobsArray] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
   const { company_name } = useParams();
 
   const getArray = async () => {
+    setisLoading(true);
     var myHeaders = new Headers();
     myHeaders.append(
       "Cookie",
@@ -27,8 +29,10 @@ function CompanyDetail() {
       let companyresponse = await response.json();
       setJobsArray(companyresponse.jobs);
       console.log(companyresponse.jobs);
+      setisLoading(false);
     } catch (error) {
       console.log(error);
+      setisLoading(false);
     }
   };
 
@@ -40,17 +44,30 @@ function CompanyDetail() {
     <div>
       <h1 className="mt-3">Jobs Search Engine</h1>
       <h3 className="mt-4">Company Details:</h3>
-      <Card className="mx-auto" style={{ width: "18rem" }}>
-        <Card.Img variant="top" src="holder.js/100px180" />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
+      {(isLoading = true) ? (
+        <Spinner animation="border" role="status"></Spinner>
+      ) : (
+        jobsArray.map((b) => (
+          <Col xs={3} key={b.id}>
+            <Card
+              className="m-2 jobCard"
+              style={{
+                height: "125px",
+                border: "3px solid black",
+              }}
+            >
+              <Card.Body className="d-flex">
+                <Card.Title
+                  className="m-auto"
+                  style={{ color: "black", fontSize: "16px" }}
+                >
+                  <p className="mb-2">{b.title}</p>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))
+      )}
     </div>
   );
 }

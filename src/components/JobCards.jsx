@@ -1,11 +1,11 @@
 import React from "react";
 import SingleJob from "./SingleJob";
-import { Col, Container, Form, Row, Button } from "react-bootstrap";
+import { Col, Container, Form, Row, Button, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
 function JobCards() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchComplete, setSearchComplete] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [jobsArray, setJobsArray] = useState([]);
 
   const handleSubmit = async (e) => {
@@ -14,11 +14,11 @@ function JobCards() {
       alert("Please input a job title!");
     } else {
       await getArray();
-      setSearchComplete(true);
     }
   };
 
   const getArray = async () => {
+    setisLoading(true);
     try {
       let response = await fetch(
         `https://remotive.io/api/remote-jobs?search=${searchQuery}`
@@ -29,8 +29,10 @@ function JobCards() {
       }
       setJobsArray(jobsresponse.jobs);
       console.log(jobsArray);
+      setisLoading(false);
     } catch (error) {
       console.log(error);
+      setisLoading(false);
     }
   };
 
@@ -58,11 +60,15 @@ function JobCards() {
             </Col>
           </Row>
           <Row>
-            {jobsArray.map((b) => (
-              <Col xs={3} key={b.id}>
-                <SingleJob job={b} id={b.id} />
-              </Col>
-            ))}
+            {isLoading ? (
+              <Spinner animation="border" role="status"></Spinner>
+            ) : (
+              jobsArray.map((b) => (
+                <Col xs={3} key={b.id}>
+                  <SingleJob job={b} id={b.id} />
+                </Col>
+              ))
+            )}
           </Row>
         </Col>
       </Row>
