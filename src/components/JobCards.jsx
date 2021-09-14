@@ -59,9 +59,14 @@ function JobCards() {
               </Form>
             </Col>
           </Row>
-          <Row>
+          <Row className="d-flex">
             {isLoading ? (
-              <Spinner animation="border" role="status"></Spinner>
+              <Spinner
+                variant="success"
+                animation="border"
+                role="status"
+                className="mx-auto mt-5"
+              ></Spinner>
             ) : (
               jobsArray.map((b) => (
                 <Col xs={3} key={b.id}>
