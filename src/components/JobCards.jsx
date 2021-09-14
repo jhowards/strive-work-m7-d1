@@ -14,6 +14,7 @@ function JobCards() {
       alert("Please input a job title!");
     } else {
       await getArray();
+      setisLoading(false);
     }
   };
 
@@ -21,13 +22,13 @@ function JobCards() {
     setisLoading(true);
     try {
       let response = await fetch(
-        `https://remotive.io/api/remote-jobs?search=${searchQuery}`
+        `https://strive-jobs-api.herokuapp.com/jobs?search=${searchQuery}`
       );
       let jobsresponse = await response.json();
       if (jobsresponse.length === 0) {
         alert("No jobs found with this title!");
       }
-      setJobsArray(jobsresponse.jobs);
+      setJobsArray(jobsresponse.data);
       console.log(jobsArray);
       setisLoading(false);
     } catch (error) {
@@ -69,8 +70,8 @@ function JobCards() {
               ></Spinner>
             ) : (
               jobsArray.map((b) => (
-                <Col xs={3} key={b.id}>
-                  <SingleJob job={b} id={b.id} />
+                <Col xs={3} key={b._id}>
+                  <SingleJob job={b} id={b._id} />
                 </Col>
               ))
             )}

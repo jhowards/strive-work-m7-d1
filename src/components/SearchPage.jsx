@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, FormControl, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import JobCards from "./JobCards";
 
 function SearchPage() {
